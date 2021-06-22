@@ -5,8 +5,10 @@ services:
     restart: always
     environment:
       PYTHONUNBUFFERED: 1
+      DB_PATH: /data/sensordb.sqlite3
+      GRAPH_DIR: /data/graph
       INTERVAL: ${INTERVAL:-300}
     devices:
       - '${HOST_PORT:-/dev/ttyUSB0}:/dev/ttyUSB0'
     volumes:
-      - './data:/work/data'
+      - './data:/data'

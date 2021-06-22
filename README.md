@@ -10,4 +10,4 @@ INTERVAL=300
 |key|value|
 |:--|:--|
 |HOST_PORT|Arduino Serial device path|
-|INTERVAL|interval by the second|
+|INTERVAL|Interval by the second|

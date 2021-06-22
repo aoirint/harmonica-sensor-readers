@@ -12,7 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def execute(
+def execute_serial(
     port: str,
     baudrate: int,
     tz: str,
@@ -57,6 +57,42 @@ def execute(
     db.close()
 
 
+def execute_graph(
+    tz: str,
+    graph_dir: Path,
+    db_path: Path,
+):
+    from graph.light import draw_days as draw_light
+    from graph.humidity import draw_days as draw_humidity
+    from graph.temperature import draw_days as draw_temperature
+
+    db = sqlite3.connect(db_path)
+    cur = db.cursor()
+
+    draw_light(
+        cur=cur,
+        output_dir=graph_dir / 'light',
+        tz=tz,
+        days=1,
+    )
+
+    draw_humidity(
+        cur=cur,
+        output_dir=graph_dir / 'humidity',
+        tz=tz,
+        days=1,
+    )
+
+    draw_temperature(
+        cur=cur,
+        output_dir=graph_dir / 'temperature',
+        tz=tz,
+        days=1,
+    )
+
+    db.close()
+
+
 if __name__ == '__main__':
     import configargparse as argparse
     parser = argparse.ArgumentParser()
@@ -64,16 +100,22 @@ if __name__ == '__main__':
     parser.add('-b', '--baudrate', env_var='BAUDRATE', type=int, default=38400)
     parser.add('-t', '--timezone', env_var='TIMEZONE', type=str, default='Asia/Tokyo')
     parser.add('-o', '--db_path', env_var='DB_PATH', type=str, default='data/sensordb.sqlite3')
+    parser.add('-g', '--graph_dir', env_var='GRAPH_DIR', type=str, default='data/graph')
     parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
 
     def call():
-        execute(
+        execute_serial(
             port=args.port,
             baudrate=args.baudrate,
             tz=args.timezone,
+            db_path=Path(args.db_path),
+        )
+        execute_graph(
+            tz=args.timezone,
+            graph_dir=Path(args.graph_dir),
             db_path=Path(args.db_path),
         )
 

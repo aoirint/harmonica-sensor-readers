@@ -18,6 +18,7 @@ def execute_serial(
     tz: str,
     db_path: Path,
 ):
+    logger.info(f'Connecting to {port} in {baudrate}')
     ser = serial.Serial(port, baudrate)
     time.sleep(3) # Wait connection established
 
@@ -104,7 +105,10 @@ if __name__ == '__main__':
     parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s %(levelname)s %(name)s : %(message)s',
+    )
 
     def call():
         execute_serial(

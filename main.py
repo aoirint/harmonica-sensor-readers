@@ -41,7 +41,7 @@ def execute(
 
     print(timestamp, pkt)
 
-    db.parent.mkdir(parents=True, exist_ok=True)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(db_path)
     cur = db.cursor()
 
@@ -54,12 +54,12 @@ def execute(
 
 
 if __name__ == '__main__':
-    import configargparse
+    import configargparse as argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', env_var='PORT', type=str, default='/dev/ttyUSB0')
-    parser.add_argument('-b', '--baudrate', env_var='BAUDRATE',type=int, default=38400)
-    parser.add_argument('-t', '--timezone', env_var='TIMEZONE',type=str, default='Asia/Tokyo')
-    parser.add_argument('-o', '--db_path', env_var='DB_PATH',type=str, default='data/sensordb.sqlite3')
+    parser.add('-p', '--port', env_var='PORT', type=str, default='/dev/ttyUSB0')
+    parser.add('-b', '--baudrate', env_var='BAUDRATE',type=int, default=38400)
+    parser.add('-t', '--timezone', env_var='TIMEZONE',type=str, default='Asia/Tokyo')
+    parser.add('-o', '--db_path', env_var='DB_PATH',type=str, default='data/sensordb.sqlite3')
     args = parser.parse_args()
 
     def call():
@@ -67,11 +67,11 @@ if __name__ == '__main__':
             port=args.port,
             baudrate=args.baudrate,
             tz=args.timezone,
-            db_path=args.db_path,
+            db_path=Path(args.db_path),
         )
 
     import schedule
-    schedule.every(5).seconds.do(call)
+    schedule.every(5).minutes.do(call)
 
     while True:
         schedule.run_pending()

@@ -3,5 +3,9 @@ services:
   app:
     build: .
     restart: always
-    volumes:
+    environment:
+      PYTHONUNBUFFERED: 1
+    devices:
       - '${HOST_PORT}:/dev/ttyUSB0'
+    volumes:
+      - './data:/work/data'

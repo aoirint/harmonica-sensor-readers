@@ -1,5 +1,9 @@
 FROM python:3
 
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+ARG NO_PROXY
+
 WORKDIR /work
 
 ADD ./requirements.txt /tmp/

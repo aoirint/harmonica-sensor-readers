@@ -7,18 +7,12 @@ from pytz import timezone
 
 import sqlite3
 
-
-if __name__ == '__main__':
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=str, default='/dev/ttyACM0')
-    parser.add_argument('-b', '--baudrate', type=int, default=38400)
-    parser.add_argument('-t', '--timezone', type=str, default='Asia/Tokyo')
-    args = parser.parse_args()
-
-    tz = args.timezone
-
-    ser = serial.Serial(args.port, args.baudrate)
+def execute(
+    port: str,
+    baudrate: int,
+    tz: str,
+):
+    ser = serial.Serial(port, baudrate)
     time.sleep(3) # Wait connection established
 
     while True:
@@ -55,3 +49,26 @@ if __name__ == '__main__':
 
     db.commit()
     db.close()
+
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--port', type=str, default='/dev/ttyACM0')
+    parser.add_argument('-b', '--baudrate', type=int, default=38400)
+    parser.add_argument('-t', '--timezone', type=str, default='Asia/Tokyo')
+    args = parser.parse_args()
+
+    def call():
+        execute(
+            port=args.port,
+            baudrate=args.baudrate,
+            tz=args.timezone,
+        )
+
+    import schedule
+    schedule.every(5).seconds.do(call)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)

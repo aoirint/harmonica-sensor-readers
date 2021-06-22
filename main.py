@@ -61,9 +61,10 @@ if __name__ == '__main__':
     import configargparse as argparse
     parser = argparse.ArgumentParser()
     parser.add('-p', '--port', env_var='PORT', type=str, default='/dev/ttyUSB0')
-    parser.add('-b', '--baudrate', env_var='BAUDRATE',type=int, default=38400)
-    parser.add('-t', '--timezone', env_var='TIMEZONE',type=str, default='Asia/Tokyo')
-    parser.add('-o', '--db_path', env_var='DB_PATH',type=str, default='data/sensordb.sqlite3')
+    parser.add('-b', '--baudrate', env_var='BAUDRATE', type=int, default=38400)
+    parser.add('-t', '--timezone', env_var='TIMEZONE', type=str, default='Asia/Tokyo')
+    parser.add('-o', '--db_path', env_var='DB_PATH', type=str, default='data/sensordb.sqlite3')
+    parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -77,7 +78,7 @@ if __name__ == '__main__':
         )
 
     import schedule
-    schedule.every(5).minutes.do(call)
+    schedule.every(args.interval).seconds.do(call)
 
     while True:
         schedule.run_pending()

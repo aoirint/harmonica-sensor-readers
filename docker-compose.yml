@@ -6,6 +6,6 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
     devices:
-      - '${HOST_PORT}:/dev/ttyUSB0'
+      - '${HOST_PORT:-/dev/ttyUSB0}:/dev/ttyUSB0'
     volumes:
       - './data:/work/data'

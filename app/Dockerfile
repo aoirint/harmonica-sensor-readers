@@ -9,6 +9,6 @@ WORKDIR /code
 ADD ./requirements.txt /tmp/
 RUN pip3 install -r /tmp/requirements.txt
 
-ADD ./app /code
+ADD ./src /code
 
 CMD [ "python3", "main.py" ]

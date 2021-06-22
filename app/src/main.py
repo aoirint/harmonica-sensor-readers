@@ -119,6 +119,8 @@ if __name__ == '__main__':
             db_path=Path(args.db_path),
         )
 
+    logger.info(f'Interval: {args.interval} s')
+
     import schedule
     schedule.every(args.interval).seconds.do(call)
 

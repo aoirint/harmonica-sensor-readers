@@ -8,6 +8,10 @@ from pytz import timezone
 from pathlib import Path
 import sqlite3
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 def execute(
     port: str,
     baudrate: int,
@@ -26,7 +30,7 @@ def execute(
             if 'light' in pkt and 'humidity' in pkt and 'temperature' in pkt:
                 break
         except:
-            print('Retry, %s' % r)
+            logger.error(f'Retry, {r}')
             pass
 
     ser.close()
@@ -39,7 +43,7 @@ def execute(
     temperature = pkt['temperature']
     timestamp = now_aware.isoformat()
 
-    print(timestamp, pkt)
+    logger.info(f'{timestamp}, {pkt}')
 
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(db_path)
@@ -62,6 +66,8 @@ if __name__ == '__main__':
     parser.add('-o', '--db_path', env_var='DB_PATH',type=str, default='data/sensordb.sqlite3')
     args = parser.parse_args()
 
+    logging.basicConfig(level=logging.INFO)
+
     def call():
         execute(
             port=args.port,
@@ -71,7 +77,7 @@ if __name__ == '__main__':
         )
 
     import schedule
-    schedule.every(5).minutes.do(call)
+    schedule.every(5).seconds.do(call)
 
     while True:
         schedule.run_pending()

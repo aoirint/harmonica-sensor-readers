@@ -77,7 +77,7 @@ if __name__ == '__main__':
         )
 
     import schedule
-    schedule.every(5).seconds.do(call)
+    schedule.every(5).minutes.do(call)
 
     while True:
         schedule.run_pending()

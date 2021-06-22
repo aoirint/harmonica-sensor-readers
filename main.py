@@ -5,12 +5,14 @@ import json
 from datetime import datetime as dt
 from pytz import timezone
 
+from pathlib import Path
 import sqlite3
 
 def execute(
     port: str,
     baudrate: int,
     tz: str,
+    db_path: Path,
 ):
     ser = serial.Serial(port, baudrate)
     time.sleep(3) # Wait connection established
@@ -39,8 +41,8 @@ def execute(
 
     print(timestamp, pkt)
 
-
-    db = sqlite3.connect('sensordb.sqlite3')
+    db.parent.mkdir(parents=True, exist_ok=True)
+    db = sqlite3.connect(db_path)
     cur = db.cursor()
 
     cur.execute('CREATE TABLE IF NOT EXISTS sensor(id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, humidity INTEGER, temperature INTEGER, timestamp DATETIME)')
@@ -52,11 +54,12 @@ def execute(
 
 
 if __name__ == '__main__':
-    import argparse
+    import configargparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', type=str, default='/dev/ttyACM0')
-    parser.add_argument('-b', '--baudrate', type=int, default=38400)
-    parser.add_argument('-t', '--timezone', type=str, default='Asia/Tokyo')
+    parser.add_argument('-p', '--port', env_var='PORT', type=str, default='/dev/ttyUSB0')
+    parser.add_argument('-b', '--baudrate', env_var='BAUDRATE',type=int, default=38400)
+    parser.add_argument('-t', '--timezone', env_var='TIMEZONE',type=str, default='Asia/Tokyo')
+    parser.add_argument('-o', '--db_path', env_var='DB_PATH',type=str, default='data/sensordb.sqlite3')
     args = parser.parse_args()
 
     def call():
@@ -64,6 +67,7 @@ if __name__ == '__main__':
             port=args.port,
             baudrate=args.baudrate,
             tz=args.timezone,
+            db_path=args.db_path,
         )
 
     import schedule

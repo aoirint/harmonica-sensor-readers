@@ -1,4 +1,4 @@
-# HomeSystemConnector
+# HomeSensorPy
 
 Create `.env`.
 

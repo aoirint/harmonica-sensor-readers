@@ -30,6 +30,9 @@ def _draw(cur, date, fp):
     x = [] ; y = []
     for row in _getData(cur, start, end):
         ts = row[5] ; val = row[1]
+        if val is None:
+            continue
+        
         ts_n = ts.replace(tzinfo=None)
 
         x.append(ts_n) ; y.append(val)

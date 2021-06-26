@@ -125,6 +125,8 @@ if __name__ == '__main__':
 
     logger.info(f'Interval: {args.interval} s')
 
+    call()
+
     import schedule
     schedule.every(args.interval).seconds.do(call)
 

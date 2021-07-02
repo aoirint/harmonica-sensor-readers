@@ -28,7 +28,7 @@ def execute_serial(
         try:
             pkt = json.loads(r.decode('ascii'))
 
-            if 'light' in pkt and 'humidity' in pkt and 'temperature' in pkt:
+            if 'light' in pkt and 'humidity' in pkt and 'temperature' in pkt and 'mhz19_co2' in pkt and 'mhz19_temperature' in pkt:
                 break
         except:
             logger.error(f'Retry, {r}')
@@ -42,6 +42,8 @@ def execute_serial(
     light = pkt['light']
     humidity = pkt['humidity']
     temperature = pkt['temperature']
+    mhz19_co2 = pkt['mhz19_co2']
+    mhz19_temperature = pkt['mhz19_temperature']
     timestamp = now_aware.isoformat()
 
     logger.info(f'{timestamp}, {pkt}')
@@ -50,9 +52,9 @@ def execute_serial(
     db = sqlite3.connect(db_path)
     cur = db.cursor()
 
-    cur.execute('CREATE TABLE IF NOT EXISTS sensor(id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, humidity INTEGER, temperature INTEGER, timestamp DATETIME)')
+    cur.execute('CREATE TABLE IF NOT EXISTS sensor(id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, humidity INTEGER, temperature INTEGER, mhz19_co2 INTEGER, mhz19_temperature INTEGER, timestamp DATETIME)')
 
-    cur.execute('INSERT INTO sensor VALUES(?,?,?,?,?)', (None, light, humidity, temperature, timestamp, ))
+    cur.execute('INSERT INTO sensor VALUES(?,?,?,?,?,?,?)', (None, light, humidity, temperature, mhz19_co2, mhz19_temperature, timestamp, ))
 
     db.commit()
     db.close()
@@ -66,6 +68,8 @@ def execute_graph(
     from graph.light import draw_days as draw_light
     from graph.humidity import draw_days as draw_humidity
     from graph.temperature import draw_days as draw_temperature
+    from graph.mhz19_co2 import draw_days as draw_mhz19_co2
+    from graph.mhz19_temperature import draw_days as draw_mhz19_temperature
 
     db = sqlite3.connect(db_path)
     cur = db.cursor()
@@ -87,6 +91,20 @@ def execute_graph(
     draw_temperature(
         cur=cur,
         output_dir=graph_dir / 'temperature',
+        tz=tz,
+        days=1,
+    )
+    
+    draw_mhz19_co2(
+        cur=cur,
+        output_dir=graph_dir / 'mhz19_co2',
+        tz=tz,
+        days=1,
+    )
+    
+    draw_mhz19_temperature(
+        cur=cur,
+        output_dir=graph_dir / 'mhz19_temperature',
         tz=tz,
         days=1,
     )

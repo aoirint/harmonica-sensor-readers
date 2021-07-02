@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 def _getData(cur, start, end):
     rows = []
     for row in cur.execute('SELECT * FROM sensor'):
-        tsString = row[4]
+        tsString = row[6]
         ts = dtparser.parse(tsString)
         if start <= ts and ts < end:
             rows.append(row + (ts, ))
@@ -29,7 +29,7 @@ def _draw(cur, date, fp):
     start = date ; end = date + timedelta(days=1)
     x = [] ; y = []
     for row in _getData(cur, start, end):
-        ts = row[5] ; val = row[3]
+        ts = row[7] ; val = row[3]
         if val is None:
             continue
 

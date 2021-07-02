@@ -29,11 +29,20 @@ def _draw(cur, date, fp):
     start = date ; end = date + timedelta(days=1)
     x = [] ; y = []
     for row in _getData(cur, start, end):
-        ts = row[7] ; val = row[2]
+        ts = row[7] ; val = row[5]
         if val is None:
             continue
-        
+
         ts_n = ts.replace(tzinfo=None)
+
+        # #define VOLT 5.0
+        # #define V_OFFSET 0.6
+        # #define DEGREE_PER_VOLT 0.01
+        #
+        # float v0 = (float)temperatureRaw / 1023 * VOLT;
+        # float temperature = (v0 - V_OFFSET) / DEGREE_PER_VOLT;
+        #val = ((raw/1023*5.0)-0.6)/0.01
+        #val -= 1.5 # hand-fix
 
         x.append(ts_n) ; y.append(val)
 
@@ -41,17 +50,15 @@ def _draw(cur, date, fp):
     end_n = end.replace(tzinfo=None)
     date_string = start_n.date().isoformat()
 
-
     plt.clf()
     fig, ax = plt.subplots()
     ax.set_xlim(start_n, end_n)
-    ax.set_ylim(0, 100)
+    ax.set_ylim(0, 40)
     ax.plot(x, y)
-    #ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
+#    ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%0.02f %%' % (x, )))
-    #ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%.1f GB' % (x / (10**9), )))
-    fig.suptitle(f'Humidity {date_string}')
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, pos: '%.2f C' % (y, )))
+    fig.suptitle(f'MHZ19 Temperature {date_string}')
     fig.savefig(fp)
 
     plt.close()
@@ -71,7 +78,7 @@ def draw_days(
     for dd in range(days):
         date = today - timedelta(days=dd)
         date_string = date.replace(tzinfo=None).date().isoformat()
-        logger.info(f'Humidity {date_string}')
+        logger.info(f'MHZ19 Temperature {date_string}')
 
         path = output_dir / f'{date_string}.png'
         _draw(cur, date, path)

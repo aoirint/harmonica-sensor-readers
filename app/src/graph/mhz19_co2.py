@@ -29,7 +29,7 @@ def _draw(cur, date, fp):
     start = date ; end = date + timedelta(days=1)
     x = [] ; y = []
     for row in _getData(cur, start, end):
-        ts = row[7] ; val = row[2]
+        ts = row[7] ; val = row[4]
         if val is None:
             continue
         
@@ -45,13 +45,13 @@ def _draw(cur, date, fp):
     plt.clf()
     fig, ax = plt.subplots()
     ax.set_xlim(start_n, end_n)
-    ax.set_ylim(0, 100)
+    #ax.set_ylim(0, 1024)
     ax.plot(x, y)
     #ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
-    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%0.02f %%' % (x, )))
+    ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: x))
     #ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%.1f GB' % (x / (10**9), )))
-    fig.suptitle(f'Humidity {date_string}')
+    fig.suptitle(f'MHZ19 CO2 {date_string}')
     fig.savefig(fp)
 
     plt.close()
@@ -71,7 +71,7 @@ def draw_days(
     for dd in range(days):
         date = today - timedelta(days=dd)
         date_string = date.replace(tzinfo=None).date().isoformat()
-        logger.info(f'Humidity {date_string}')
+        logger.info(f'MHZ19 CO2 {date_string}')
 
         path = output_dir / f'{date_string}.png'
         _draw(cur, date, path)

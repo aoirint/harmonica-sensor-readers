@@ -45,7 +45,7 @@ def _draw(cur, date, fp):
     plt.clf()
     fig, ax = plt.subplots()
     ax.set_xlim(start_n, end_n)
-    #ax.set_ylim(0, 1024)
+    ax.set_ylim(200, 1400)
     ax.plot(x, y)
     #ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))

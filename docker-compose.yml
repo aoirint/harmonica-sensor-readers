@@ -11,6 +11,6 @@ services:
       DB_PATH: /data/sensordb.sqlite3
       GRAPH_DIR: /data/graph
     volumes:
-      - '${HOST_DATA_DIR:-./data}:/data'
+      - '${HOST_DATA_DIR}:/data'
     devices:
       - '${HOST_PORT}:/dev/ttyUSB0'

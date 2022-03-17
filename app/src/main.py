@@ -1,3 +1,4 @@
+from typing import Optional
 import serial
 import time
 import json
@@ -5,8 +6,7 @@ import json
 from datetime import datetime as dt
 from pytz import timezone
 
-from pathlib import Path
-import sqlite3
+import requests
 
 import logging
 logger = logging.getLogger(__name__)
@@ -16,7 +16,8 @@ def execute_serial(
     port: str,
     baudrate: int,
     tz: str,
-    db_path: Path,
+    api_url: str,
+    admin_secret: str,
 ):
     logger.info(f'Connecting to {port} in {baudrate}')
     ser = serial.Serial(port, baudrate)
@@ -48,68 +49,64 @@ def execute_serial(
 
     logger.info(f'{timestamp}, {pkt}')
 
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    db = sqlite3.connect(db_path)
-    cur = db.cursor()
+    logger.info(f'Sending data to {api_url}')
+    session = requests.Session(headers={
+        'content-type': 'application/json',
+        'x-hasura-admin-secret': admin_secret,
+    })
 
-    cur.execute('CREATE TABLE IF NOT EXISTS sensor(id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, humidity INTEGER, temperature INTEGER, mhz19_co2 INTEGER, mhz19_temperature INTEGER, timestamp DATETIME)')
+    def insertSensorValue(key: str, value: float, timestamp: str):
+        response = session.post(api_url, data={
+            'query': '''
+mutation AddSensorValue(
+    $key: String!
+    $value: numeric!
+    $timestamp: Date!
+) {
+    sensorValue: insert_SensorValue_one(
+        object: {
+            key: $key
+            value: $value
+            timestamp: $timestamp
+        }
+    ) {
+        id
+    }
+}
+''',
+            'variables': {
+                'key': key,
+                'value': value,
+                'timestamp': timestamp,
+            }
+        })
+        print(response.json())
 
-    cur.execute('INSERT INTO sensor VALUES(?,?,?,?,?,?,?)', (None, light, humidity, temperature, mhz19_co2, mhz19_temperature, timestamp, ))
-
-    db.commit()
-    db.close()
-
-
-def execute_graph(
-    tz: str,
-    graph_dir: Path,
-    db_path: Path,
-):
-    from graph.light import draw_days as draw_light
-    from graph.humidity import draw_days as draw_humidity
-    from graph.temperature import draw_days as draw_temperature
-    from graph.mhz19_co2 import draw_days as draw_mhz19_co2
-    from graph.mhz19_temperature import draw_days as draw_mhz19_temperature
-
-    db = sqlite3.connect(db_path)
-    cur = db.cursor()
-
-    draw_light(
-        cur=cur,
-        output_dir=graph_dir / 'light',
-        tz=tz,
-        days=1,
+    insertSensorValue(
+        key='light',
+        value=light,
+        timestamp=timestamp,
     )
-
-    draw_humidity(
-        cur=cur,
-        output_dir=graph_dir / 'humidity',
-        tz=tz,
-        days=1,
+    insertSensorValue(
+        key='humidity',
+        value=humidity,
+        timestamp=timestamp,
     )
-
-    draw_temperature(
-        cur=cur,
-        output_dir=graph_dir / 'temperature',
-        tz=tz,
-        days=1,
+    insertSensorValue(
+        key='temperature',
+        value=temperature,
+        timestamp=timestamp,
     )
-    
-    draw_mhz19_co2(
-        cur=cur,
-        output_dir=graph_dir / 'mhz19_co2',
-        tz=tz,
-        days=1,
+    insertSensorValue(
+        key='mhz19_co2',
+        value=mhz19_co2,
+        timestamp=timestamp,
     )
-    
-    draw_mhz19_temperature(
-        cur=cur,
-        output_dir=graph_dir / 'mhz19_temperature',
-        tz=tz,
-        days=1,
+    insertSensorValue(
+        key='mhz19_temperature',
+        value=mhz19_temperature,
+        timestamp=timestamp,
     )
-
-    db.close()
 
 
 if __name__ == '__main__':
@@ -118,8 +115,8 @@ if __name__ == '__main__':
     parser.add('-p', '--port', env_var='PORT', type=str, default='/dev/ttyUSB0')
     parser.add('-b', '--baudrate', env_var='BAUDRATE', type=int, default=38400)
     parser.add('-t', '--timezone', env_var='TIMEZONE', type=str, default='Asia/Tokyo')
-    parser.add('-o', '--db_path', env_var='DB_PATH', type=str, default='data/sensordb.sqlite3')
-    parser.add('-g', '--graph_dir', env_var='GRAPH_DIR', type=str, default='data/graph')
+    parser.add('--api_url', env_var='API_URL', type=str, required=True)
+    parser.add('--admin_secret', env_var='ADMIN_SECRET', type=str, required=True)
     parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
     args = parser.parse_args()
 
@@ -133,12 +130,8 @@ if __name__ == '__main__':
             port=args.port,
             baudrate=args.baudrate,
             tz=args.timezone,
-            db_path=Path(args.db_path),
-        )
-        execute_graph(
-            tz=args.timezone,
-            graph_dir=Path(args.graph_dir),
-            db_path=Path(args.db_path),
+            api_url=args.api_url,
+            admin_secret=args.admin_secret,
         )
 
     logger.info(f'Interval: {args.interval} s')

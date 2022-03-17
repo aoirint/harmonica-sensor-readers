@@ -57,7 +57,7 @@ def execute_serial(
     }
 
     def insertSensorValue(key: str, value: float, timestamp: str):
-        response = session.post(api_url, data={
+        response = session.post(api_url, data=json.dumps({
             'query': '''
 mutation AddSensorValue(
     $key: String!
@@ -80,7 +80,7 @@ mutation AddSensorValue(
                 'value': value,
                 'timestamp': timestamp,
             }
-        })
+        }, ensure_ascii=False))
         print(response.json())
 
     insertSensorValue(

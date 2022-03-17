@@ -50,10 +50,11 @@ def execute_serial(
     logger.info(f'{timestamp}, {pkt}')
 
     logger.info(f'Sending data to {api_url}')
-    session = requests.Session(headers={
+    session = requests.Session()
+    session.headers = {
         'content-type': 'application/json',
         'x-hasura-admin-secret': admin_secret,
-    })
+    }
 
     def insertSensorValue(key: str, value: float, timestamp: str):
         response = session.post(api_url, data={

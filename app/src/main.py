@@ -144,7 +144,7 @@ mutation AddSensorValue(
     )
 
 def save_sqlite3(
-    db_path: str,
+    db_path: Path,
     light: float,
     humidity: float,
     temperature: float,

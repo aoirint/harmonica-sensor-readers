@@ -61,6 +61,7 @@ def execute_serial(
         temperature=temperature,
         mhz19_co2=mhz19_co2,
         mhz19_temperature=mhz19_temperature,
+        timestamp=timestamp,
     )
 
     save_sqlite3(
@@ -70,6 +71,7 @@ def execute_serial(
         temperature=temperature,
         mhz19_co2=mhz19_co2,
         mhz19_temperature=mhz19_temperature,
+        timestamp=timestamp,
     )
 
 

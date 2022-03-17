@@ -62,7 +62,7 @@ def execute_serial(
 mutation AddSensorValue(
     $key: String!
     $value: numeric!
-    $timestamp: Date!
+    $timestamp: timestamptz!
 ) {
     sensorValue: insert_SensorValue_one(
         object: {

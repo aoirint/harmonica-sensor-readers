@@ -5,8 +5,8 @@ services:
     restart: always
     environment:
       PYTHONUNBUFFERED: 1
+      INTERVAL: ${INTERVAL}
       API_URL: ${API_URL}
       ADMIN_SECRET: ${ADMIN_SECRET}
-      INTERVAL: ${INTERVAL}
     devices:
-      - '${HOST_PORT:-/dev/ttyUSB0}:/dev/ttyUSB0'
+      - '${HOST_PORT}:/dev/ttyUSB0'

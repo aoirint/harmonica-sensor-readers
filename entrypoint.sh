@@ -2,6 +2,6 @@
 
 set -eu
 
-usermod -aG user "${HOST_DIALOUT_GID}"
+usermod -aG "${HOST_DIALOUT_GID}" user
 
 exec "$@"

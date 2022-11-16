@@ -1,14 +1,9 @@
 FROM python:3.10
 
-ARG HTTP_PROXY
-ARG HTTPS_PROXY
-ARG NO_PROXY
-
-WORKDIR /code
-
 ADD ./requirements.txt /tmp/
 RUN pip3 install -r /tmp/requirements.txt
 
-ADD ./src /code
+ADD ./harmonica-sensor-reader /opt/harmonica-sensor-reader
 
+WORKDIR /opt/harmonica-sensor-reader
 CMD [ "python3", "main.py" ]

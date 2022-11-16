@@ -13,8 +13,8 @@ ADMIN_SECRET=myadminsecretkey
 
 |key|value|
 |:--|:--|
-|HOST_PORT|Arduino Serial device path|
-|HOST_DATA_DIR|Local data/db path（Harmonicaが安定稼働するまでの暫定的なHomeSensorPy相当機能の維持）|
+|HOST_PORT|Arduino Serial device path (UID:GID = root:dialout)|
+|HOST_DATA_DIR|Local data/db path (UID:GID = 2000:2000)（Harmonicaが安定稼働するまでの暫定的なHomeSensorPy相当機能の維持）|
 |HOST_DIALOUT_GID| `getent group dialout \| cut -d: -f3` |
 |INTERVAL|Interval by the second|
 |API_URL|Hasura GraphQL API endpoint|

@@ -1,5 +1,13 @@
 # Harmonica Sensor Reader
 
+## Links
+
+- GitHub: <https://github.com/aoirint/harmonica-sensor-reader>
+- Docker Hub: <https://hub.docker.com/r/aoirint/harmonica-sensor-reader>
+
+
+## Environment variables
+
 Create `.env`.
 
 ```env

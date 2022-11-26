@@ -228,7 +228,7 @@ if __name__ == '__main__':
     parser.add('--api_url', env_var='API_URL', type=str, required=True)
     parser.add('--admin_secret', env_var='ADMIN_SECRET', type=str, required=True)
     parser.add('--db_path', env_var='DB_PATH', type=str, default='data/sensordb.sqlite3')
-    parser.add('-g', '--graph_dir', env_var='GRAPH_DIR', type=str, default='data/graph')
+    #parser.add('-g', '--graph_dir', env_var='GRAPH_DIR', type=str, default='data/graph')
     parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
     args = parser.parse_args()
 
@@ -246,11 +246,11 @@ if __name__ == '__main__':
             admin_secret=args.admin_secret,
             db_path=Path(args.db_path),
         )
-        execute_graph(
-            tz=args.timezone,
-            graph_dir=Path(args.graph_dir),
-            db_path=Path(args.db_path),
-        )
+        #execute_graph(
+        #    tz=args.timezone,
+        #    graph_dir=Path(args.graph_dir),
+        #    db_path=Path(args.db_path),
+        #)
 
     logger.info(f'Interval: {args.interval} s')
 

@@ -15,10 +15,9 @@ EOF
 ADD ./requirements.txt /tmp/
 RUN gosu user pip3 install -r /tmp/requirements.txt
 
-ADD ./harmonica-sensor-reader /opt/harmonica-sensor-reader
+ADD ./harmonica_sensor_node /opt/harmonica_sensor_node
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-WORKDIR /opt/harmonica-sensor-reader
-CMD [ "gosu", "user", "python3", "main.py" ]
+CMD [ "gosu", "user", "python3", "/opt/harmonica_sensor_node/main.py" ]

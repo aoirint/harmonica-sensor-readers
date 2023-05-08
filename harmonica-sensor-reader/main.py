@@ -9,7 +9,9 @@ from pytz import timezone
 from pathlib import Path
 import sqlite3
 
+from urllib3.util import Retry
 import requests
+from requests.adapters import HTTPAdapter
 
 import logging
 logger = logging.getLogger(__name__)
@@ -87,6 +89,10 @@ def save_graphql_api(
 ):
     logger.info(f'Sending data to {api_url}')
     session = requests.Session()
+
+    retries = Retry(total=5, backoff_factor=1, status_forcelist=[500, 502, 503, 504])
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+
     session.headers = {
         'content-type': 'application/json',
         'x-hasura-admin-secret': admin_secret,
@@ -116,7 +122,7 @@ mutation AddSensorValue(
                 'value': value,
                 'timestamp': timestamp,
             }
-        }, ensure_ascii=False))
+        }, ensure_ascii=False), timeout=(10.0, 30.0))
         print(response.json())
 
     insertSensorValue(

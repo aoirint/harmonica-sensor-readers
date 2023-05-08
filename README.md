@@ -1,9 +1,9 @@
-# Harmonica Sensor Reader
+# Harmonica Sensor Node
 
 ## Links
 
-- GitHub: <https://github.com/aoirint/harmonica-sensor-reader>
-- Docker Hub: <https://hub.docker.com/r/aoirint/harmonica-sensor-reader>
+- GitHub: <https://github.com/aoirint/harmonica_sensor_node>
+- Docker Hub: <https://hub.docker.com/r/aoirint/harmonica_sensor_node>
 
 
 ## Environment variables

@@ -5,6 +5,9 @@
 - GitHub: <https://github.com/aoirint/harmonica_sensor_node>
 - Docker Hub: <https://hub.docker.com/r/aoirint/harmonica_sensor_node>
 
+## Supported sensor device
+
+- <https://github.com/aoirint/HomeSensorIno>
 
 ## Environment variables
 

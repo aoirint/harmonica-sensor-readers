@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "harmonica-sensor-node"
+version = "0.0.0"
+description = ""
+authors = ["aoirint <aoirint@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+pyserial = "^3.5"
+pytz = "^2023.3.post1"
+schedule = "^1.2.1"
+configargparse = "^1.7"
+requests = "^2.31.0"
+matplotlib = "^3.8.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -11,13 +11,16 @@
 
 ## Development guide
 
+- Python 3.11
+
+ライブラリ管理に[Poetry](https://python-poetry.org/docs/#installation)を使っています。
+
 ```shell
-python3 -m venv venv
-source venv/bin/activate
+poetry install
 
-pip3 install -e .
+poetry run python scripts/main.py --help
 
-python3 scripts/main.py --help
+poetry export --without-hashes -o requirements.txt
 ```
 
 ## Environment variables

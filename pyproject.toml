@@ -7,6 +7,12 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "~3.11"
+pyserial = "^3.5"
+pytz = "^2023.3.post1"
+schedule = "^1.2.1"
+configargparse = "^1.7"
+requests = "^2.31.0"
+matplotlib = "^3.8.0"
 
 
 [build-system]

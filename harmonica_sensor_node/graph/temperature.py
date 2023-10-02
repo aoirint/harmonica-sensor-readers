@@ -1,7 +1,8 @@
 import logging
-from datetime import datetime as dt
-from datetime import timedelta
+import sqlite3
+from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 
 import dateutil.parser as dtparser
 import matplotlib
@@ -14,7 +15,7 @@ matplotlib.use("Agg")
 logger = logging.getLogger(__name__)
 
 
-def _getData(cur, start, end):
+def _getData(cur: sqlite3.Cursor, start: datetime, end: datetime) -> list[Any]:
     rows = []
     for row in cur.execute("SELECT * FROM sensor"):
         tsString = row[6]
@@ -24,7 +25,7 @@ def _getData(cur, start, end):
     return rows
 
 
-def _draw(cur, date, fp):
+def _draw(cur: sqlite3.Cursor, date: datetime, fp: Path) -> None:
     start = date
     end = date + timedelta(days=1)
     x = []
@@ -68,12 +69,12 @@ def _draw(cur, date, fp):
 
 
 def draw_days(
-    cur,
+    cur: sqlite3.Cursor,
     output_dir: Path,
     tz: str,
     days: int = 1,
-):
-    now = dt.now(timezone(tz))
+) -> None:
+    now = datetime.now(timezone(tz))
     today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     output_dir.mkdir(parents=True, exist_ok=True)

@@ -5,9 +5,17 @@ import time
 from datetime import datetime as dt
 from pathlib import Path
 
+import configargparse as argparse
 import requests
 import serial
 from harmonica_sensor_node import __VERSION__ as APP_VERSION
+from harmonica_sensor_node.graph.humidity import draw_days as draw_humidity
+from harmonica_sensor_node.graph.light import draw_days as draw_light
+from harmonica_sensor_node.graph.mhz19_co2 import draw_days as draw_mhz19_co2
+from harmonica_sensor_node.graph.mhz19_temperature import (
+    draw_days as draw_mhz19_temperature,
+)
+from harmonica_sensor_node.graph.temperature import draw_days as draw_temperature
 from pytz import timezone
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
@@ -210,12 +218,6 @@ def execute_graph(
     graph_dir: Path,
     db_path: Path,
 ) -> None:
-    from graph.humidity import draw_days as draw_humidity
-    from graph.light import draw_days as draw_light
-    from graph.mhz19_co2 import draw_days as draw_mhz19_co2
-    from graph.mhz19_temperature import draw_days as draw_mhz19_temperature
-    from graph.temperature import draw_days as draw_temperature
-
     db = sqlite3.connect(db_path)
     cur = db.cursor()
 
@@ -258,8 +260,6 @@ def execute_graph(
 
 
 if __name__ == "__main__":
-    import configargparse as argparse
-
     parser = argparse.ArgumentParser()
     parser.add("-p", "--port", env_var="PORT", type=str, default="/dev/ttyUSB0")
     parser.add("-b", "--baudrate", env_var="BAUDRATE", type=int, default=38400)

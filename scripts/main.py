@@ -12,6 +12,7 @@ import sqlite3
 from urllib3.util import Retry
 import requests
 from requests.adapters import HTTPAdapter
+from . import __VERSION__ as APP_VERSION
 
 import logging
 logger = logging.getLogger(__name__)
@@ -236,6 +237,11 @@ if __name__ == '__main__':
     parser.add('--db_path', env_var='DB_PATH', type=str, default='data/sensordb.sqlite3')
     #parser.add('-g', '--graph_dir', env_var='GRAPH_DIR', type=str, default='data/graph')
     parser.add('-i', '--interval', env_var='INTERVAL', type=int, default=15*60)
+    parser.add(
+        '--version',
+        action='version',
+        version=APP_VERSION,
+    )
     args = parser.parse_args()
 
     logging.basicConfig(

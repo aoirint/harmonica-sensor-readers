@@ -9,6 +9,17 @@
 
 - <https://github.com/aoirint/HomeSensorIno>
 
+## Development guide
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+
+pip3 install -e .
+
+python3 scripts/main.py --help
+```
+
 ## Environment variables
 
 Create `.env`.

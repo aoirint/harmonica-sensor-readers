@@ -20,6 +20,9 @@ poetry install
 
 poetry run python scripts/main.py --help
 
+poetry run pysen run lint
+poetry run pysen run format
+
 poetry export --without-hashes -o requirements.txt
 ```
 

@@ -43,7 +43,6 @@ def execute_serial(
                 break
         except ValueError:
             logger.error(f"Retry, {r}")
-            pass
 
     ser.close()
 

@@ -22,7 +22,7 @@ def execute_serial(
     api_url: str,
     admin_secret: str,
     db_path: Path,
-):
+) -> None:
     logger.info(f"Connecting to {port} in {baudrate}")
     ser = serial.Serial(port, baudrate)
     time.sleep(3)  # Wait connection established
@@ -88,7 +88,7 @@ def save_graphql_api(
     mhz19_co2: float,
     mhz19_temperature: float,
     timestamp: str,
-):
+) -> None:
     logger.info(f"Sending data to {api_url}")
     session = requests.Session()
 
@@ -100,7 +100,7 @@ def save_graphql_api(
         "x-hasura-admin-secret": admin_secret,
     }
 
-    def insertSensorValue(key: str, value: float, timestamp: str):
+    def insertSensorValue(key: str, value: float, timestamp: str) -> None:
         response = session.post(
             api_url,
             data=json.dumps(
@@ -169,7 +169,7 @@ def save_sqlite3(
     mhz19_co2: float,
     mhz19_temperature: float,
     timestamp: str,
-):
+) -> None:
     db_path.parent.mkdir(parents=True, exist_ok=True)
     db = sqlite3.connect(db_path)
     cur = db.cursor()
@@ -209,7 +209,7 @@ def execute_graph(
     tz: str,
     graph_dir: Path,
     db_path: Path,
-):
+) -> None:
     from graph.humidity import draw_days as draw_humidity
     from graph.light import draw_days as draw_light
     from graph.mhz19_co2 import draw_days as draw_mhz19_co2
@@ -283,7 +283,7 @@ if __name__ == "__main__":
         format="%(asctime)s %(levelname)s %(name)s : %(message)s",
     )
 
-    def call():
+    def call() -> None:
         execute_serial(
             port=args.port,
             baudrate=args.baudrate,

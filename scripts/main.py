@@ -4,7 +4,6 @@ import sqlite3
 import time
 from datetime import datetime as dt
 from pathlib import Path
-from typing import Optional
 
 import requests
 import serial

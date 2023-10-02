@@ -60,7 +60,8 @@ def _draw(cur: sqlite3.Cursor, date: datetime, fp: Path) -> None:
     ax.set_ylim(0, 40)
     ax.plot(x, y)
     #    ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
-    ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
+    date_formatter = mdates.DateFormatter(fmt="%H:%M")  # type: ignore[no-untyped-call]
+    ax.xaxis.set_major_formatter(date_formatter)
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda y, pos: "%.2f C" % (y,)))
     fig.suptitle(f"MHZ19 Temperature {date_string}")
     fig.savefig(fp)

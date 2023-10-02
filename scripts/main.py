@@ -41,7 +41,7 @@ def execute_serial(
                 and "mhz19_temperature" in pkt
             ):
                 break
-        except:
+        except ValueError:
             logger.error(f"Retry, {r}")
             pass
 

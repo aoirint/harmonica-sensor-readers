@@ -12,7 +12,7 @@ import sqlite3
 from urllib3.util import Retry
 import requests
 from requests.adapters import HTTPAdapter
-from . import __VERSION__ as APP_VERSION
+from harmonica_sensor_node import __VERSION__ as APP_VERSION
 
 import logging
 logger = logging.getLogger(__name__)

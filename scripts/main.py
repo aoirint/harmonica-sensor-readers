@@ -176,7 +176,17 @@ def save_sqlite3(
     cur = db.cursor()
 
     cur.execute(
-        "CREATE TABLE IF NOT EXISTS sensor(id INTEGER PRIMARY KEY AUTOINCREMENT, light INTEGER, humidity INTEGER, temperature INTEGER, mhz19_co2 INTEGER, mhz19_temperature INTEGER, timestamp DATETIME)"
+        """
+            CREATE TABLE IF NOT EXISTS sensor(
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                light INTEGER,
+                humidity INTEGER,
+                temperature INTEGER,
+                mhz19_co2 INTEGER,
+                mhz19_temperature INTEGER,
+                timestamp DATETIME
+            )
+        """
     )
 
     cur.execute(

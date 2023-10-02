@@ -24,6 +24,7 @@ poetry run pysen run lint
 poetry run pysen run format
 
 poetry export --without-hashes -o requirements.txt
+poetry export --without-hashes --with dev -o requirements-dev.txt
 ```
 
 ## Environment variables

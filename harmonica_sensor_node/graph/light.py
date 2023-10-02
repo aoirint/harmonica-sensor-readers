@@ -52,7 +52,11 @@ def _draw(cur, date, fp):
     # ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: x))
-    # ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%.1f GB' % (x / (10**9), )))
+    # ax.yaxis.set_major_formatter(
+    #     ticker.FuncFormatter(
+    #         lambda x, pos: "%.1f GB" % (x / (10**9),),
+    #     ),
+    # )
     fig.suptitle(f"Light {date_string}")
     fig.savefig(fp)
 

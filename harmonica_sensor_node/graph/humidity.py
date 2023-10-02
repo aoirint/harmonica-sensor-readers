@@ -54,7 +54,11 @@ def _draw(cur, date, fp):
     ax.yaxis.set_major_formatter(
         ticker.FuncFormatter(lambda x, pos: "%0.02f %%" % (x,))
     )
-    # ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%.1f GB' % (x / (10**9), )))
+    # ax.yaxis.set_major_formatter(
+    #     ticker.FuncFormatter(
+    #         lambda x, pos: "%.1f GB" % (x / (10**9),),
+    #     ),
+    # )
     fig.suptitle(f"Humidity {date_string}")
     fig.savefig(fp)
 

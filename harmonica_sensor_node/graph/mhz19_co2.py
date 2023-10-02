@@ -1,18 +1,16 @@
+import logging
 from datetime import datetime as dt
 from datetime import timedelta
+from pathlib import Path
 
 import dateutil.parser as dtparser
 import matplotlib
-from pytz import timezone
-
-matplotlib.use("Agg")
-import logging
-from pathlib import Path
-
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from pytz import timezone
 
+matplotlib.use("Agg")
 logger = logging.getLogger(__name__)
 
 
@@ -54,7 +52,11 @@ def _draw(cur, date, fp):
     # ax.plot([ start, end ], [ 10 * 10**9, ] * 2)
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%H:%M"))
     ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: x))
-    # ax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x, pos: '%.1f GB' % (x / (10**9), )))
+    # ax.yaxis.set_major_formatter(
+    #     ticker.FuncFormatter(
+    #         lambda x, pos: "%.1f GB" % (x / (10**9),),
+    #     ),
+    # )
     fig.suptitle(f"MHZ19 CO2 {date_string}")
     fig.savefig(fp)
 

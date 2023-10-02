@@ -4,7 +4,6 @@ services:
     build: .
     restart: always
     environment:
-      PYTHONUNBUFFERED: 1
       HOST_DIALOUT_GID: ${HOST_DIALOUT_GID:?}
       INTERVAL: ${INTERVAL:?}
       API_URL: ${API_URL:?}

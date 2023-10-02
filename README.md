@@ -19,6 +19,8 @@
 poetry install
 
 poetry run python scripts/main.py --help
+
+poetry export --without-hashes -o requirements.txt
 ```
 
 ## Environment variables

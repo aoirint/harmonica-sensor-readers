@@ -50,4 +50,5 @@ EOF
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
+WORKDIR /code/harmonica_sensor_node
 CMD [ "gosu", "user", "poetry", "run", "python", "-m", "harmonica_sensor_node" ]

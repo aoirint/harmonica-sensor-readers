@@ -35,7 +35,7 @@ ADD ./harmonica_sensor_node /code/harmonica_sensor_node
 RUN <<EOF
     set -eu
 
-    gosu pip install --editable /code/harmonica_sensor_node
+    gosu user pip install --editable /code/harmonica_sensor_node
 EOF
 
 ADD ./entrypoint.sh /

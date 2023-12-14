@@ -1,10 +1,12 @@
 import json
 import logging
+import os
 import time
+from argparse import ArgumentParser
 from datetime import datetime as dt
 
-import configargparse as argparse
 import requests
+import schedule
 import serial
 from harmonica_sensor_node import __VERSION__ as APP_VERSION
 from pytz import timezone
@@ -149,20 +151,64 @@ mutation AddSensorValue(
     )
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add("-p", "--port", env_var="PORT", type=str, default="/dev/ttyUSB0")
-    parser.add("-b", "--baudrate", env_var="BAUDRATE", type=int, default=38400)
-    parser.add("-t", "--timezone", env_var="TIMEZONE", type=str, default="Asia/Tokyo")
-    parser.add("--api_url", env_var="API_URL", type=str, required=True)
-    parser.add("--admin_secret", env_var="ADMIN_SECRET", type=str, required=True)
-    parser.add("-i", "--interval", env_var="INTERVAL", type=int, default=15 * 60)
-    parser.add(
+def main() -> None:
+    default_port = os.environ.get("PORT") or "/dev/ttyUSB0"
+    default_baudrate = os.environ.get("BAUDRATE") or "38400"
+    default_timezone = os.environ.get("TIMEZONE") or "Asia/Tokyo"
+    default_api_url = os.environ.get("API_URL") or None
+    default_admin_secret = os.environ.get("ADMIN_SECRET") or None
+    default_interval = os.environ.get("INTERVAL") or "900"
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-p",
+        "--port",
+        type=str,
+        default=default_port,
+    )
+    parser.add_argument(
+        "-b",
+        "--baudrate",
+        type=int,
+        default=default_baudrate,
+    )
+    parser.add_argument(
+        "-t",
+        "--timezone",
+        type=str,
+        default=default_timezone,
+    )
+    parser.add_argument(
+        "--api_url",
+        type=str,
+        default=default_api_url,
+        required=default_api_url is None,
+    )
+    parser.add_argument(
+        "--admin_secret",
+        type=str,
+        default=default_admin_secret,
+        required=default_admin_secret is None,
+    )
+    parser.add_argument(
+        "-i",
+        "--interval",
+        type=int,
+        default=default_interval,
+    )
+    parser.add_argument(
         "--version",
         action="version",
         version=APP_VERSION,
     )
     args = parser.parse_args()
+
+    port: str = args.port
+    baudrate: int = args.baudrate
+    timezone: str = args.timezone
+    api_url: str = args.api_url
+    admin_secret: str = args.admin_secret
+    interval: int = args.interval
 
     logging.basicConfig(
         level=logging.INFO,
@@ -171,21 +217,23 @@ if __name__ == "__main__":
 
     def call() -> None:
         execute_serial(
-            port=args.port,
-            baudrate=args.baudrate,
-            tz=args.timezone,
-            api_url=args.api_url,
-            admin_secret=args.admin_secret,
+            port=port,
+            baudrate=baudrate,
+            tz=timezone,
+            api_url=api_url,
+            admin_secret=admin_secret,
         )
 
-    logger.info(f"Interval: {args.interval} s")
+    logger.info(f"Interval: {interval} s")
 
     call()
 
-    import schedule
-
-    schedule.every(args.interval).seconds.do(call)
+    schedule.every(interval).seconds.do(call)
 
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+
+if __name__ == "__main__":
+    main()

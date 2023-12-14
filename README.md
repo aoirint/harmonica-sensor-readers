@@ -18,7 +18,7 @@
 ```shell
 poetry install
 
-poetry run python scripts/main.py --help
+poetry run python -m harmonica_sensor_node --help
 
 poetry run pysen run lint
 poetry run pysen run format

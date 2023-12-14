@@ -28,7 +28,6 @@ pytz = "^2023.3.post1"
 schedule = "^1.2.1"
 configargparse = "^1.7"
 requests = "^2.31.0"
-matplotlib = "^3.8.0"
 
 
 [tool.poetry.group.dev.dependencies]

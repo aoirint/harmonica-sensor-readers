@@ -40,15 +40,14 @@ EOF
 
 ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
 
+WORKDIR /code/harmonica_sensor_node
 RUN <<EOF
     set -eu
 
-    cd /code/harmonica_sensor_node
     gosu user poetry install
 EOF
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-WORKDIR /code/harmonica_sensor_node
 CMD [ "gosu", "user", "poetry", "run", "python", "-m", "harmonica_sensor_node" ]

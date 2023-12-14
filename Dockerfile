@@ -44,7 +44,7 @@ WORKDIR /code/harmonica_sensor_node
 RUN <<EOF
     set -eu
 
-    gosu user poetry install
+    gosu user poetry install --only main
 EOF
 
 ADD ./entrypoint.sh /

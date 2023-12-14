@@ -30,10 +30,15 @@ RUN <<EOF
     gosu user pip install -r /tmp/requirements.txt
 EOF
 
-ADD ./scripts /code
 ADD ./harmonica_sensor_node /code/harmonica_sensor_node
+
+RUN <<EOF
+    set -eu
+
+    gosu pip install --editable /code/harmonica_sensor_node
+EOF
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD [ "gosu", "user", "python", "/code/main.py" ]
+CMD [ "gosu", "user", "python", "-m", "harmonica_sensor_node" ]

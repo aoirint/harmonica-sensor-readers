@@ -23,22 +23,31 @@ RUN <<EOF
     useradd -m -o -u 2000 -g user user
 EOF
 
-ADD ./requirements.txt /tmp/
 RUN <<EOF
     set -eu
 
-    gosu user pip install -r /tmp/requirements.txt
+    mkdir -p /code/harmonica_sensor_node
+    chown -R "user:user" /code/harmonica_sensor_node
 EOF
 
-ADD ./harmonica_sensor_node /code/harmonica_sensor_node
+ADD ./pyproject.toml ./poetry.lock /code/harmonica_sensor_node/
+ARG POETRY_VERSION=1.7.1
+RUN <<EOF
+    set -eu
+
+    gosu user pip install "poetry==${POETRY_VERSION}"
+EOF
+
+ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
 
 RUN <<EOF
     set -eu
 
-    gosu user pip install --editable /code/harmonica_sensor_node
+    cd /code/harmonica_sensor_node
+    gosu user poetry install
 EOF
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
 
-CMD [ "gosu", "user", "python", "-m", "harmonica_sensor_node" ]
+CMD [ "gosu", "user", "poetry", "run", "python", "-m", "harmonica_sensor_node" ]

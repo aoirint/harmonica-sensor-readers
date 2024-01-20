@@ -23,6 +23,13 @@ RUN <<EOF
     useradd -m -o -u 2000 -g user user
 EOF
 
+ARG POETRY_VERSION=1.7.1
+RUN <<EOF
+    set -eu
+
+    gosu user pip install "poetry==${POETRY_VERSION}"
+EOF
+
 RUN <<EOF
     set -eu
 
@@ -33,15 +40,8 @@ RUN <<EOF
     chown -R "user:user" /home/user/.cache
 EOF
 
-ADD ./pyproject.toml ./poetry.lock /code/harmonica_sensor_node/
-ARG POETRY_VERSION=1.7.1
-RUN <<EOF
-    set -eu
-
-    gosu user pip install "poetry==${POETRY_VERSION}"
-EOF
-
 WORKDIR /code/harmonica_sensor_node
+ADD ./pyproject.toml ./poetry.lock /code/harmonica_sensor_node/
 RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache \
     --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/artifacts <<EOF
     set -eu

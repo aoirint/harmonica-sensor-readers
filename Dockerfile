@@ -44,8 +44,8 @@ EOF
 ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
 
 WORKDIR /code/harmonica_sensor_node
-RUN --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/cache \
-    --mount=type=cache,uid=1000,gid=1000,target=/home/user/.cache/pypoetry/artifacts <<EOF
+RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache \
+    --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/artifacts <<EOF
     set -eu
 
     gosu user poetry install --only main

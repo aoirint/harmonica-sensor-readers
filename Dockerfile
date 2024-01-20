@@ -41,8 +41,6 @@ RUN <<EOF
     gosu user pip install "poetry==${POETRY_VERSION}"
 EOF
 
-ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
-
 WORKDIR /code/harmonica_sensor_node
 RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache \
     --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/artifacts <<EOF
@@ -50,6 +48,8 @@ RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache
 
     gosu user poetry install --only main
 EOF
+
+ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]

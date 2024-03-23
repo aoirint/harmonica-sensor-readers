@@ -19,8 +19,8 @@ EOF
 RUN <<EOF
     set -eu
 
-    groupadd -g 2000 user
-    useradd -m -o -u 2000 -g user user
+    groupadd --non-unique --gid 2000 user
+    useradd --non-unique --uid 2000 --gid 2000 --create-home user
 EOF
 
 ARG POETRY_VERSION=1.8.2

@@ -4,7 +4,7 @@ FROM python:3.11
 ARG DEBIAN_FRONTEND=noninteractive
 ARG PIP_NO_CACHE_DIR=1
 ENV PYTHONUNBUFFERED=1
-ENV PATH=/home/user/.local/bin:${PATH}
+ENV PATH=/code/harmonica_sensor_node/.venv/bin:/home/user/.local/bin:${PATH}
 
 RUN <<EOF
     apt-get update
@@ -28,6 +28,11 @@ RUN <<EOF
     set -eu
 
     gosu user pip install "poetry==${POETRY_VERSION}"
+
+    gosu user poetry config virtualenvs.in-project true
+
+    mkdir -p /home/user/.cache/pypoetry/{cache,artifacts}
+    chown -R "user:user" /home/user/.cache
 EOF
 
 RUN <<EOF
@@ -35,9 +40,6 @@ RUN <<EOF
 
     mkdir -p /code/harmonica_sensor_node
     chown -R "user:user" /code/harmonica_sensor_node
-
-    mkdir -p /home/user/.cache/pypoetry/{cache,artifacts}
-    chown -R "user:user" /home/user/.cache
 EOF
 
 WORKDIR /code/harmonica_sensor_node

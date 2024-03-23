@@ -7,6 +7,8 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH=/home/user/.local/bin:${PATH}
 
 RUN <<EOF
+    set -eu
+
     apt-get update
 
     apt-get install -y \

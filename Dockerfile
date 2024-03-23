@@ -23,7 +23,7 @@ RUN <<EOF
     useradd -m -o -u 2000 -g user user
 EOF
 
-ARG POETRY_VERSION=1.7.1
+ARG POETRY_VERSION=1.8.2
 RUN <<EOF
     set -eu
 

@@ -46,10 +46,17 @@ RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache
     --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/artifacts <<EOF
     set -eu
 
-    gosu user poetry install --only main
+    gosu user poetry install --no-root --only main
 EOF
 
 ADD ./harmonica_sensor_node /code/harmonica_sensor_node/harmonica_sensor_node
+ADD ./README.md /code/harmonica_sensor_node/
+RUN --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/cache \
+    --mount=type=cache,uid=2000,gid=2000,target=/home/user/.cache/pypoetry/artifacts <<EOF
+    set -eu
+
+    gosu user poetry install --only main
+EOF
 
 ADD ./entrypoint.sh /
 ENTRYPOINT [ "/entrypoint.sh" ]
